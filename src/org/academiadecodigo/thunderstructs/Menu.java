@@ -6,6 +6,7 @@ import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 public class Menu {
 
     public void run(){
+
         Prompt prompt = new Prompt(System.in, System.out);
 
         String[] options = {"Instructions", "Number Picker", "Quit"};
@@ -23,7 +24,9 @@ public class Menu {
     public void menuOptions(int menuAnswer) {
 
         while (true) {
+
             switch (menuAnswer) {
+
                 case 1:
                     System.out.println("Instructions chosen");
                     System.exit(0);
