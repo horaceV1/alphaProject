@@ -3,6 +3,8 @@ package org.academiadecodigo.thunderstructs;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 
+import static org.academiadecodigo.thunderstructs.Messages.INSTRUCTIONS;
+
 public class Menu {
 
     public void run(){
@@ -30,16 +32,15 @@ public class Menu {
                 case 1:
                     //Escolher um input para poder voltar para trás sem lixar o menu
                     //Simplesmente faz um prompt com as instruções do jogo
-                    System.out.println("Instructions chosen");
+                    System.out.println(INSTRUCTIONS);
                     System.exit(0);
                     break;
                 case 2:
-                    //Abre o jogo
-                    System.out.println("Guess the Number chosen");
-                    System.exit(0);
+                    System.out.println("Guess the Number!");
+
                     break;
                 case 3:
-                    System.out.println("Quit");
+                    System.out.println("Bye!");
                     System.exit(0);
                     break;
             }
