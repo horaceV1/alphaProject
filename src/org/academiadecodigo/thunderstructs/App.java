@@ -1,6 +1,6 @@
 package org.academiadecodigo.thunderstructs;
 
-import static org.academiadecodigo.thunderstructs.Messages.WELCOME_TEXT;
+import static org.academiadecodigo.thunderstructs.Utility.Messages.WELCOME_TEXT;
 
 public class App {
 

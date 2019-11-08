@@ -4,7 +4,7 @@ import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
-import static org.academiadecodigo.thunderstructs.Messages.INSTRUCTIONS;
+import static org.academiadecodigo.thunderstructs.Utility.Messages.INSTRUCTIONS;
 
 public class Menu {
 
