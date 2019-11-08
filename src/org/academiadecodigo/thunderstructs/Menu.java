@@ -18,7 +18,6 @@ public class Menu {
         System.out.println("User chose: " + options[menuAnswer - 1]);
 
         menuOptions(menuAnswer - 1);
-
     }
 
     public void menuOptions(int menuAnswer) {
