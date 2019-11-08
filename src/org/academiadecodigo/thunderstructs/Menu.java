@@ -28,10 +28,13 @@ public class Menu {
             switch (menuAnswer) {
 
                 case 1:
+                    //Escolher um input para poder voltar para trás sem lixar o menu
+                    //Simplesmente faz um prompt com as instruções do jogo
                     System.out.println("Instructions chosen");
                     System.exit(0);
                     break;
                 case 2:
+                    //Abre o jogo
                     System.out.println("Guess the Number chosen");
                     System.exit(0);
                     break;
