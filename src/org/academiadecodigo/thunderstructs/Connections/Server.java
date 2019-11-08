@@ -1,32 +1,52 @@
 package org.academiadecodigo.thunderstructs.Connections;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
-    private static final int PORT_NUMBER = 8080;
 
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
+    private ServerSocket serverSocket;
+    private DataOutputStream sendData;
+    private ExecutorService clientThread = Executors.newCachedThreadPool();
+    private ConcurrentHashMap<String, Socket> hashMap = new ConcurrentHashMap<>();
 
-        while(true) {
-            Socket socket = serverSocket.accept();
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    public Server(int port) {
 
-            String info;
-            while((info = bufferedReader.readLine()) != null) {
-                System.out.println(info);
-                if(info.equals("")) {
-                    break;
-                }
+        try {
+            serverSocket = new ServerSocket(port);
+            System.out.println("******Server is online******");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void main(String[] args) {
+
+        Server Server = new Server(8080);
+        Server.start();
+
+    }
+
+    public void start() {
+
+        Socket clientSocket;
+
+        while (true) {
+
+            try {
+                clientSocket = serverSocket.accept();
+                clientThread.submit(new ClientHandler(clientSocket, this));
+                String ip = clientSocket.getInetAddress().toString().substring(1);
+                System.out.println("Welcome! " + ip);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            serverSocket.close();
-            socket.close();
-            bufferedOutputStream.close();
-            bufferedReader.close();
         }
     }
 }

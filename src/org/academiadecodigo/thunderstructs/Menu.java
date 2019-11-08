@@ -4,8 +4,6 @@ import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
-import static org.academiadecodigo.thunderstructs.Messages.INSTRUCTIONS;
-
 public class Menu {
 
     public Prompt prompt;
@@ -33,18 +31,12 @@ public class Menu {
             switch (menuAnswer) {
 
                 case 1:
-
                     instructions();
-                    //Escolher um input para poder voltar para trás sem lixar o menu
-
-
+                    break;
                 case 2:
-
                     System.out.println("Guess the Number!");
-
                     break;
                 case 3:
-
                     System.out.println("Bye!");
                     System.exit(0);
                     break;
@@ -55,8 +47,9 @@ public class Menu {
 
     public void instructions(){
         StringInputScanner goBack = new StringInputScanner();
-        goBack.setMessage(INSTRUCTIONS);
+        goBack.setMessage(Messages.INSTRUCTIONS);
         prompt.getUserInput(goBack);
+        run();
     }
 
 }
