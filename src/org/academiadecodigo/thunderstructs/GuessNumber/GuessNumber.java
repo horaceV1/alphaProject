@@ -6,9 +6,7 @@ import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
 
 public class GuessNumber {
 
-    private int min = 0;
-    private int max = 10;
-    private int player1Choice;
+
 
     public Prompt prompt;
 
@@ -26,15 +24,10 @@ public class GuessNumber {
 
     }
 
-    public void player1GuessNumber() {
-
-        if()
-    }
 
     public void player1Guess() {
 
-        IntegerInputScanner question1 = new IntegerRangeInputScanner(min, max);
-        player1Choice = prompt.getUserInput(question1);
+
     }
 
 
