@@ -1,7 +1,6 @@
 package org.academiadecodigo.thunderstructs.Connections;
 
 import org.academiadecodigo.bootcamp.Prompt;
-import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class Server {
     private ServerSocket serverSocket;
     private DataOutputStream sendData;
     private ExecutorService clientThread = Executors.newCachedThreadPool();
-    private HashMap<String, ClientHandler> hashMap = new HashMap<>();
+    public static HashMap<String, ClientHandler> hashMap = new HashMap<>();
     private Prompt prompt;
 
     public Server(int port) {
@@ -53,21 +52,5 @@ public class Server {
         }
     }
 
-    public synchronized void registerClient(String nickname, ClientHandler clientHandler) {
-        hashMap.put(nickname, clientHandler);
-    }
 
-    public void broadcast(byte[] buffer, int line, String nickname) {
-        System.out.println(nickname + ": " + new String(buffer, 0, line));
-            for (ClientHandler key : hashMap.values()) {
-                if ((key.equals(nickname))) {
-                    continue;
-                }
-
-                StringInputScanner stringInputScanner = new StringInputScanner();
-                stringInputScanner.setMessage(nickname + ": ");
-                String message = prompt.getUserInput(stringInputScanner);
-
-            }
-    }
 }

@@ -4,22 +4,19 @@ import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
 
+    public PrintStream sendToClient;
     private Socket clientSocket;
     private Server server;
-    private DataOutputStream clientOutStream;
     private DataInputStream clientInputStream;
-    private int line = 0;
     private String nickname = "";
-    private byte[] buffer = new byte[1024];
-    private String[] args = new String[3];
     private Prompt prompt;
+
 
     public ClientHandler(Socket clientSocket, Server server) {
         this.server = server;
@@ -30,40 +27,43 @@ public class ClientHandler implements Runnable {
 
         try {
             clientInputStream = new DataInputStream(clientSocket.getInputStream());
-            clientOutStream = new DataOutputStream(clientSocket.getOutputStream());
-            prompt = new Prompt(clientSocket.getInputStream(), new PrintStream(clientSocket.getOutputStream()));
+            sendToClient = new PrintStream(clientSocket.getOutputStream());
+            prompt = new Prompt(clientInputStream, sendToClient);
+            pickName();
 
-            getNickname();
-            while ((line = clientInputStream.read(buffer)) != -1) {
-                String command = new String(buffer, 0, line);
-                args = command.split(" ");
-                synchronized (this) {
-                    server.broadcast(buffer, line, nickname);
-                }
-                    }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void getNickname() {
-
-        //try {
+    public void pickName() {
 
         StringInputScanner stringInputScanner = new StringInputScanner();
         stringInputScanner.setMessage("Introduce yourself: ");
         String message = prompt.getUserInput(stringInputScanner);
+        this.nickname = message;
 
-        server.registerClient(message, this);
-
-
-
-        //if((line = clientInputStream.read(buffer)) != -1) {
-        //    nickname = new String(buffer, 0, line);
-        //    server.registerClient(message, this);
-        //}
-        //} catch (IOException e) {
-        //    e.printStackTrace();
-        //}
+        registerClient(message, this);
+        broadcast(message + " has joined the lobby.");
     }
+
+
+    public synchronized void registerClient(String nickname, ClientHandler clientHandler) {
+        Server.hashMap.put(nickname, clientHandler);
+    }
+
+    public void broadcast(String message) {
+
+        for (String client : Server.hashMap.keySet()) {
+
+            System.out.println(client + ": " + message);
+            Server.hashMap.get(client).sendToClient.println(message);
+
+        }
+    }
+
+    public String getNickname() {
+        return this.nickname;
+    }
+
 }
