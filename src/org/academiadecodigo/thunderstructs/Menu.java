@@ -6,14 +6,17 @@ import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
+<<<<<<< HEAD
 import static org.academiadecodigo.thunderstructs.Utility.Messages.INSTRUCTIONS;
 
+=======
+>>>>>>> 8342c61eba5af2b12be8126b4fd770672ee83b66
 public class Menu {
 
 
     public Prompt prompt;
 
-    public void run(){
+    public void run() {
 
         prompt = new Prompt(System.in, System.out);
 
@@ -32,35 +35,26 @@ public class Menu {
 
     public void menuOptions(int menuAnswer) {
 
-        //while (true) {
+        switch (menuAnswer) {
 
-            switch (menuAnswer) {
-
-                case 1:
-
-                    instructions();
-                    //Escolher um input para poder voltar para trás sem lixar o menu
-
-
-                case 2:
-
-                    System.out.println("Guess the Number!");
-
-                    break;
-                case 3:
-
-                    System.out.println("Bye!");
-                    System.exit(0);
-                    break;
-            }
-           // break;
-        //}
+            case 1:
+                instructions();
+                break;
+            case 2:
+                System.out.println("Guess the Number!");
+                break;
+            case 3:
+                System.out.println("Bye!");
+                System.exit(0);
+                break;
+        }
     }
 
-    public void instructions(){
+    public void instructions() {
         StringInputScanner goBack = new StringInputScanner();
-        goBack.setMessage(INSTRUCTIONS);
+        goBack.setMessage(Messages.INSTRUCTIONS);
         prompt.getUserInput(goBack);
+        run();
     }
 
 
