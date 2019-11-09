@@ -2,12 +2,18 @@ package org.academiadecodigo.thunderstructs;
 
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Utility.Messages;
+
+import static org.academiadecodigo.thunderstructs.Utility.Messages.INSTRUCTIONS;
 
 public class Menu {
 
-    public void run(){
+    public Prompt prompt;
 
-        Prompt prompt = new Prompt(System.in, System.out);
+    public void run() {
+
+        prompt = new Prompt(System.in, System.out);
 
         String[] options = {"Instructions", "Number Picker", "Quit"};
 
@@ -17,30 +23,32 @@ public class Menu {
         int menuAnswer = prompt.getUserInput(menu);
         System.out.println("User chose: " + options[menuAnswer - 1]);
 
-        menuOptions(menuAnswer - 1);
+        menuOptions(menuAnswer);
+
     }
 
     public void menuOptions(int menuAnswer) {
 
-        while (true) {
+        switch (menuAnswer) {
 
-            switch (menuAnswer) {
-
-                case 1:
-                    System.out.println("Instructions chosen");
-                    System.exit(0);
-                    break;
-                case 2:
-                    System.out.println("Guess the Number chosen");
-                    System.exit(0);
-                    break;
-                case 3:
-                    System.out.println("Quit");
-                    System.exit(0);
-                    break;
-            }
-            break;
+            case 1:
+                instructions();
+                break;
+            case 2:
+                System.out.println("Guess the Number!");
+                break;
+            case 3:
+                System.out.println("Bye!");
+                System.exit(0);
+                break;
         }
+    }
+
+    public void instructions() {
+        StringInputScanner goBack = new StringInputScanner();
+        goBack.setMessage(Messages.INSTRUCTIONS);
+        prompt.getUserInput(goBack);
+        run();
     }
 
 }
