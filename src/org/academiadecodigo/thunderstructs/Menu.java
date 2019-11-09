@@ -3,16 +3,18 @@ package org.academiadecodigo.thunderstructs;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Blackjack.Blackjack;
+import org.academiadecodigo.thunderstructs.Utility.Messages;
 
 public class Menu {
 
-    public Prompt prompt;
+    private Prompt prompt;
 
     public void run() {
 
         prompt = new Prompt(System.in, System.out);
 
-        String[] options = {"Instructions", "Number Picker", "Quit"};
+        String[] options = {"Instructions", "Guess the Number", "Guess the Card", "BlackJack", "Quit"};
 
         MenuInputScanner menu = new MenuInputScanner(options);
         menu.setMessage("Pick a number: ");
@@ -27,7 +29,6 @@ public class Menu {
     public void menuOptions(int menuAnswer) {
 
         switch (menuAnswer) {
-
             case 1:
                 instructions();
                 break;
@@ -35,13 +36,21 @@ public class Menu {
                 System.out.println("Guess the Number!");
                 break;
             case 3:
+                System.out.println("Guess the Card!");
+                break;
+            case 4:
+                System.out.println("BlackJack!");
+                Blackjack blackjack = new Blackjack();
+                blackjack.run();
+                break;
+            case 5:
                 System.out.println("Bye!");
                 System.exit(0);
                 break;
         }
     }
 
-    public void instructions() {
+    private void instructions() {
         StringInputScanner goBack = new StringInputScanner();
         goBack.setMessage(Messages.INSTRUCTIONS);
         prompt.getUserInput(goBack);

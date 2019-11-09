@@ -1,5 +1,7 @@
 package org.academiadecodigo.thunderstructs;
 
+import org.academiadecodigo.thunderstructs.Utility.Messages;
+
 public class App {
 
 

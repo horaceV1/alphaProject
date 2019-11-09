@@ -47,7 +47,6 @@ public class ClientHandler implements Runnable {
         broadcast(message + " has joined the lobby.");
     }
 
-
     public synchronized void registerClient(String nickname, ClientHandler clientHandler) {
         Server.hashMap.put(nickname, clientHandler);
     }
