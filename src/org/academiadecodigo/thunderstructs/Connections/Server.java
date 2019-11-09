@@ -19,6 +19,10 @@ public class Server {
     public static HashMap<String, ClientHandler> hashMap = new HashMap<>();
     private Prompt prompt;
 
+    private int min = 0;
+    private int max = 10;
+    private int systemNumber = (int) (Math.random() * (max - min + 1) + min);
+
     public Server(int port) {
 
         try {
@@ -52,5 +56,15 @@ public class Server {
         }
     }
 
+    public int getMin() {
+        return min;
+    }
 
+    public int getMax() {
+        return max;
+    }
+
+    public int getSystemNumber() {
+        return systemNumber;
+    }
 }

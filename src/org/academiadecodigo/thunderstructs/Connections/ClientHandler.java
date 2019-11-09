@@ -5,6 +5,7 @@ import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
 import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Menu;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -19,12 +20,11 @@ public class ClientHandler implements Runnable {
     private DataInputStream clientInputStream;
     private Prompt prompt;
     private String nickname = "";
+    boolean win = false;
 
-    private int min = 0;
-    private int max = 10;
+
     private int playerChoice;
-
-    private int systemNumber = (int) (Math.random() * (max - min + 1) + min);
+    public Menu menu = new Menu();
 
 
     public ClientHandler(Socket clientSocket, Server server) {
@@ -52,7 +52,7 @@ public class ClientHandler implements Runnable {
         String message = prompt.getUserInput(stringInputScanner);
 
         registerClient(message, this);
-        System.out.println("System number: " + systemNumber);
+        System.out.println("Server number: " + server.getSystemNumber());
         broadcast(message + " has joined the lobby.");
     }
 
@@ -66,7 +66,7 @@ public class ClientHandler implements Runnable {
             System.out.println(client + ": " + message);
             Server.hashMap.get(client).sendToClient.println(message);
 
-            while (true) {
+            while (win == false) {
                 gameLogic(client);
                 //metes um mathrandom numa variavel, IF um client acertar acaba o jogo
             }
@@ -74,18 +74,19 @@ public class ClientHandler implements Runnable {
     }
 
     public void gameLogic(String client) {
-        IntegerInputScanner question1 = new IntegerRangeInputScanner(min, max);
+        IntegerInputScanner question1 = new IntegerRangeInputScanner(server.getMin(), server.getMax());
         question1.setMessage("Pick a number: ");
         playerChoice = prompt.getUserInput(question1);
         System.out.println(client + ": " + playerChoice);
 
-        if (playerChoice == systemNumber) {
+        if (playerChoice == server.getSystemNumber()) {
             broadcast(client + ", you won!");
-            menu();
+            win = true;
+            endgameMenu();
         }
     }
 
-    public void menu() {
+    public void endgameMenu() {
 
         String[] options = {"Back to Menu", "Play Again"};
 
@@ -101,7 +102,7 @@ public class ClientHandler implements Runnable {
     public void menuOptions(int menuAnswer) {
         switch (menuAnswer) {
             case 1:
-                broadcast("Back to Menu");
+                menu.run();
                 break;
             case 2:
                 System.out.println("Play Again");
