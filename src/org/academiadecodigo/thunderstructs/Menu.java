@@ -1,12 +1,15 @@
 package org.academiadecodigo.thunderstructs;
 
 import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 
 import static org.academiadecodigo.thunderstructs.Utility.Messages.INSTRUCTIONS;
 
 public class Menu {
+
 
     public Prompt prompt;
 
@@ -23,6 +26,7 @@ public class Menu {
         System.out.println("User chose: " + options[menuAnswer - 1]);
 
         menuOptions(menuAnswer);
+        player1Guess();
 
     }
 
@@ -58,5 +62,6 @@ public class Menu {
         goBack.setMessage(INSTRUCTIONS);
         prompt.getUserInput(goBack);
     }
+
 
 }
