@@ -8,7 +8,7 @@ public class Menu {
 
     public Prompt prompt;
 
-    public void run(){
+    public void run() {
 
         prompt = new Prompt(System.in, System.out);
 
@@ -26,26 +26,22 @@ public class Menu {
 
     public void menuOptions(int menuAnswer) {
 
-        //while (true) {
+        switch (menuAnswer) {
 
-            switch (menuAnswer) {
-
-                case 1:
-                    instructions();
-                    break;
-                case 2:
-                    System.out.println("Guess the Number!");
-                    break;
-                case 3:
-                    System.out.println("Bye!");
-                    System.exit(0);
-                    break;
-            }
-           // break;
-        //}
+            case 1:
+                instructions();
+                break;
+            case 2:
+                System.out.println("Guess the Number!");
+                break;
+            case 3:
+                System.out.println("Bye!");
+                System.exit(0);
+                break;
+        }
     }
 
-    public void instructions(){
+    public void instructions() {
         StringInputScanner goBack = new StringInputScanner();
         goBack.setMessage(Messages.INSTRUCTIONS);
         prompt.getUserInput(goBack);
