@@ -1,7 +1,11 @@
 package org.academiadecodigo.thunderstructs.Connections;
 
 import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
+import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Menu;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -14,8 +18,13 @@ public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private Server server;
     private DataInputStream clientInputStream;
-    private String nickname = "";
     private Prompt prompt;
+    private String nickname = "";
+    boolean win = false;
+
+
+    private int playerChoice;
+    public Menu menu = new Menu();
 
 
     public ClientHandler(Socket clientSocket, Server server) {
@@ -41,9 +50,9 @@ public class ClientHandler implements Runnable {
         StringInputScanner stringInputScanner = new StringInputScanner();
         stringInputScanner.setMessage("Introduce yourself: ");
         String message = prompt.getUserInput(stringInputScanner);
-        this.nickname = message;
 
         registerClient(message, this);
+        System.out.println("Server number: " + server.getSystemNumber());
         broadcast(message + " has joined the lobby.");
     }
 
@@ -54,15 +63,54 @@ public class ClientHandler implements Runnable {
     public void broadcast(String message) {
 
         for (String client : Server.hashMap.keySet()) {
-
             System.out.println(client + ": " + message);
             Server.hashMap.get(client).sendToClient.println(message);
 
+            while (win == false) {
+                gameLogic(client);
+                //metes um mathrandom numa variavel, IF um client acertar acaba o jogo
+            }
         }
     }
 
-    public String getNickname() {
-        return this.nickname;
+    public void gameLogic(String client) {
+        IntegerInputScanner question1 = new IntegerRangeInputScanner(server.getMin(), server.getMax());
+        question1.setMessage("Pick a number: ");
+        playerChoice = prompt.getUserInput(question1);
+        System.out.println(client + ": " + playerChoice);
+
+        if (playerChoice == server.getSystemNumber()) {
+            broadcast(client + ", you won!");
+            win = true;
+            endgameMenu();
+        }
     }
 
+    public void endgameMenu() {
+
+        String[] options = {"Back to Menu", "Play Again"};
+
+        MenuInputScanner menu = new MenuInputScanner(options);
+        menu.setMessage("Pick a number: ");
+
+        int menuAnswer = prompt.getUserInput(menu);
+        System.out.println("User chose: " + options[menuAnswer - 1]);
+
+        menuOptions(menuAnswer);
+    }
+
+    public void menuOptions(int menuAnswer) {
+        switch (menuAnswer) {
+            case 1:
+                menu.run();
+                break;
+            case 2:
+                System.out.println("Play Again");
+                break;
+        }
+    }
+
+    public String getNickname () {
+        return this.nickname;
+    }
 }

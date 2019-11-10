@@ -1,61 +1,71 @@
 package org.academiadecodigo.thunderstructs.Connections;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client implements Runnable {
+public class Client {
 
-    private static final int PORT_NUMBER = 8080;
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
 
-    public static void main(String[] args) throws IOException {
-        Scanner scn = new Scanner(System.in);
+    public Client() {
 
-        InetAddress ip = InetAddress.getByName("localhost");
+        try {
+            socket = new Socket("localhost", 8080);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        Socket socket = new Socket(ip, PORT_NUMBER);
+        } catch (IOException e) {
 
-        DataInputStream inputStream = new DataInputStream(socket.getInputStream());
-        DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            e.printStackTrace();
 
-        Thread userInput = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    String msg = scn.nextLine();
-                    try {
-                        outputStream.writeUTF(msg);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        }
+    }
+
+
+    public void run() {
+
+        Scanner input = new Scanner(System.in);
 
         Thread readMessage = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                String msg;
                 while (true) {
+
                     try {
-                        String msg = inputStream.readUTF();
-                        System.out.println(msg);
+                        while((msg = in.readLine()) != null){
+                            System.out.println(msg);
+                        }
                     } catch (IOException e) {
-                        e.printStackTrace();
+
+                        System.err.println("Connection closed");
+                        break;
                     }
                 }
             }
         });
 
-        userInput.start();
         readMessage.start();
+
+        while (true) {
+
+            String msg = input.nextLine();
+            out.println(msg);
+
+        }
 
     }
 
-    @Override
-    public void run() {
+    public static void main(String[] args) {
 
+        Client client = new Client();
+        client.run();
     }
 }
