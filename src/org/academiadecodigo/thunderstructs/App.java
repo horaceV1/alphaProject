@@ -1,8 +1,11 @@
 package org.academiadecodigo.thunderstructs;
 
 import org.academiadecodigo.thunderstructs.Utility.Messages;
+<<<<<<< HEAD
 
 import static org.academiadecodigo.thunderstructs.Utility.Messages.WELCOME_TEXT;
+=======
+>>>>>>> guessnumber
 
 public class App {
 
