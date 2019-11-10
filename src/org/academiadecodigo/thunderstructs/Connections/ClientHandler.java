@@ -50,7 +50,7 @@ public class ClientHandler implements Runnable {
         String name = prompt.getUserInput(stringInputScanner);
 
         registerClient(name, this);
-        broadcast(getNickname() + " has joined the lobby.");
+        broadcast(name + " has joined the lobby.");
 
         if (Server.hashMap.size() == 0) {
             System.out.println("Server number: " + server.getSystemNumber());
@@ -64,13 +64,20 @@ public class ClientHandler implements Runnable {
     public void broadcast(String message) {
 
         for (String client : Server.hashMap.keySet()) {
-            System.out.println(client + ": " + message);
-            Server.hashMap.get(client).sendToClient.println(message);
-            System.out.println(Server.hashMap.get(client).getNickname());
+            if(!gameOver) {
+                System.out.println(client + ": " + message);
+                Server.hashMap.get(client).sendToClient.println(message);
+                System.out.println(Server.hashMap.get(client).getNickname());
+            } else {
+                subMenu();
+            }
+
 
             while (!gameOver) {
                 gameLogic(client);
             }
+
+
         }
 
     }
@@ -94,14 +101,13 @@ public class ClientHandler implements Runnable {
         }
 
         if (playerChoice == server.getSystemNumber()) {
-            endgameMenu();
-            broadcast(client + ", you won!");
             gameOver = true;
+            broadcast(client + " won!");
+            subMenu();
         }
     }
 
-    public void endgameMenu() {
-
+    public void subMenu() {
 
         String[] options = {"Back to Menu", "Play Again"};
 
