@@ -5,7 +5,10 @@ import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
 import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Blackjack.Blackjack;
 import org.academiadecodigo.thunderstructs.Menu;
+import org.academiadecodigo.thunderstructs.Utility.Colors;
+import org.academiadecodigo.thunderstructs.Utility.Messages;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -25,7 +28,6 @@ public class ClientHandler implements Runnable {
     private int playerChoice;
     private boolean openMenu = true;
 
-
     public ClientHandler(Socket clientSocket, Server server) {
         this.server = server;
         this.clientSocket = clientSocket;
@@ -34,16 +36,31 @@ public class ClientHandler implements Runnable {
     public void run() {
 
         try {
-            if (!gameOver) {
-                clientInputStream = new DataInputStream(clientSocket.getInputStream());
-                sendToClient = new PrintStream(clientSocket.getOutputStream());
-                prompt = new Prompt(clientInputStream, sendToClient);
+            if(!gameOver){
+            clientInputStream = new DataInputStream(clientSocket.getInputStream());
+            sendToClient = new PrintStream(clientSocket.getOutputStream());
+            prompt = new Prompt(clientInputStream, sendToClient);
+            runMenu();
 
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void runMenu() {
+
+        String[] options = {"Instructions", "Guess the Number", "Quit"};
+
+        MenuInputScanner menu = new MenuInputScanner(options);
+        menu.setMessage("Pick a number: ");
+
+        int menuAnswer = prompt.getUserInput(menu);
+        System.out.println("User chose: " + options[menuAnswer - 1]);
+
+        menuOptions2(menuAnswer);
+
     }
 
     public void pickName() {
@@ -60,26 +77,25 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized void registerClient(String nickname, ClientHandler clientHandler) {
-        Server.hashMap.put(nickname, clientHandler);
-    }
-
     public void broadcast(String message) {
 
         for (String client : Server.hashMap.keySet()) {
-            if (!gameOver && !openMenu) {
+            if(!gameOver && !openMenu) {
                 System.out.println(client + ": " + message);
                 Server.hashMap.get(client).sendToClient.println(message);
                 System.out.println(Server.hashMap.get(client).getNickname());
-            } else if (gameOver && !openMenu) {
+            } else if (gameOver && !openMenu){
                 subMenu();
+            } else if (openMenu && gameOver) {
+                runMenu();
+            }
 
-                while (!gameOver) {
-                    openMenu = false;
-                    gameLogic(client);
-                }
+            while (!gameOver) {
+                openMenu = false;
+                gameLogic(client);
             }
         }
+
     }
 
     public void gameLogic(String client) {
@@ -88,14 +104,14 @@ public class ClientHandler implements Runnable {
             return;
         }
 
-        if (server.getCounter() == 0) {
+        if(server.getCounter() == 0) {
             IntegerInputScanner question1 = new IntegerRangeInputScanner(server.getMin(), server.getMax());
             question1.setMessage("Pick a number: ");
             playerChoice = prompt.getUserInput(question1);
             System.out.println(client + ": " + playerChoice);
             Server.counter += 1;
             System.out.println(Server.counter);
-            if (Server.counter == Server.hashMap.size()) {
+            if(Server.counter == Server.hashMap.size()) {
                 server.resetCounter();
             }
         }
@@ -103,40 +119,72 @@ public class ClientHandler implements Runnable {
         if (playerChoice == server.getSystemNumber()) {
             gameOver = true;
             broadcast(client + " won!");
+            Server.hashMap.clear();
             subMenu();
         }
     }
 
-
     public void subMenu() {
 
-        String[] options = {"Play Again", "Back to the menu"};
+        String[] options = {"Back to Menu", "Quit"};
 
         MenuInputScanner menu = new MenuInputScanner(options);
         menu.setMessage("Choose an option: ");
 
         int menuAnswer = prompt.getUserInput(menu);
-
         System.out.println("User chose: " + options[menuAnswer - 1]);
 
-        menuOptions(menuAnswer);
-    }
+        if(menuAnswer == 1) {
+            menuOptions(1);
+        }else{
+          menuOptions(2);
+            }
+        }
 
     public void menuOptions(int menuAnswer) {
         switch (menuAnswer) {
             case 1:
-                gameOver = false;
-                broadcast("Starting new game");
-                break;
-            case 2:
                 openMenu = true;
                 broadcast("Opening menu");
+
+            case 2:
+               System.exit(1);
                 break;
         }
+    }
+///////////////////////////////////////////////////////////////////////////////
+    public void menuOptions2(int menuAnswer2) {
+
+        switch (menuAnswer2) {
+            case 1:
+                instructions();
+                break;
+            case 2:
+                System.out.println("Guess the Number");
+                openMenu = false;
+                gameOver = false;
+                pickName();
+                break;
+            case 3:
+                System.out.println("Bye!");
+                System.exit(0);
+                break;
+        }
+    }
+
+    private void instructions() {
+        StringInputScanner goBack = new StringInputScanner();
+        goBack.setMessage(Messages.INSTRUCTIONS);
+        goBack.setError("Press ANY key and ENTER to go back!");
+        prompt.getUserInput(goBack);
+        run();
     }
 
     public String getNickname() {
         return this.nickname;
     }
 
+    public synchronized void registerClient(String nickname, ClientHandler clientHandler) {
+        Server.hashMap.put(nickname, clientHandler);
+    }
 }

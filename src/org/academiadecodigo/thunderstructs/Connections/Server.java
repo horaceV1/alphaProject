@@ -1,7 +1,5 @@
 package org.academiadecodigo.thunderstructs.Connections;
 
-import org.academiadecodigo.bootcamp.Prompt;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,7 +13,6 @@ public class Server {
     private ServerSocket serverSocket;
     private DataOutputStream sendData;
     public static HashMap<String, ClientHandler> hashMap = new HashMap<>();
-    private Prompt prompt;
 
     public static int counter = 0;
     private int min = 0;
