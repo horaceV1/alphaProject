@@ -14,37 +14,30 @@ public class Client {
     private PrintWriter out;
 
     public Client() {
-
         try {
             socket = new Socket("localhost", 8080);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
     }
 
 
     public void run() {
-
         Scanner input = new Scanner(System.in);
 
         Thread readMessage = new Thread(new Runnable() {
             @Override
             public void run() {
 
-                String msg;
+                String message;
                 while (true) {
-
                     try {
-                        while((msg = in.readLine()) != null){
-                            System.out.println(msg);
+                        while((message = in.readLine()) != null){
+                            System.out.println(message);
                         }
                     } catch (IOException e) {
-
                         System.err.println("Connection closed");
                         break;
                     }
@@ -55,16 +48,12 @@ public class Client {
         readMessage.start();
 
         while (true) {
-
-            String msg = input.nextLine();
-            out.println(msg);
-
+            String message = input.nextLine();
+            out.println(message);
         }
-
     }
 
     public static void main(String[] args) {
-
         Client client = new Client();
         client.run();
     }

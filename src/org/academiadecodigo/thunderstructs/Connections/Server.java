@@ -4,7 +4,6 @@ import org.academiadecodigo.bootcamp.Prompt;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -15,10 +14,10 @@ public class Server {
 
     private ServerSocket serverSocket;
     private DataOutputStream sendData;
-    private ExecutorService clientThread = Executors.newCachedThreadPool();
     public static HashMap<String, ClientHandler> hashMap = new HashMap<>();
     private Prompt prompt;
 
+    public static int counter = 0;
     private int min = 0;
     private int max = 10;
     private int systemNumber = (int) (Math.random() * (max - min + 1) + min);
@@ -27,7 +26,7 @@ public class Server {
 
         try {
             serverSocket = new ServerSocket(port);
-            System.out.println("*** Server is online ***");
+            System.out.println("*** Server is online ***\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,19 +39,26 @@ public class Server {
 
     public void start() {
 
-        Socket clientSocket;
+        try {
 
-        while (true) {
-            try {
-                clientSocket = serverSocket.accept();
-                prompt = new Prompt(clientSocket.getInputStream(), new PrintStream(clientSocket.getOutputStream()));
-                clientThread.submit(new ClientHandler(clientSocket, this));
-                String ip = clientSocket.getInetAddress().toString().substring(1);
-                System.out.println("Welcome! " + ip);
+            ExecutorService clientThread = Executors.newCachedThreadPool();
 
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (serverSocket.isBound()) {
+
+                System.out.println("GameHub: Waiting for player to join...");
+                Socket clientSocket = serverSocket.accept();
+
+                ClientHandler playerHandler = new ClientHandler(clientSocket, this);
+                clientThread.submit(playerHandler);
+
+                System.out.println("A new player joined the lobby.");
+
             }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
         }
     }
 
@@ -66,5 +72,17 @@ public class Server {
 
     public int getSystemNumber() {
         return systemNumber;
+    }
+
+    public static HashMap<String, ClientHandler> getPlayers() {
+        return hashMap;
+    }
+
+    public int getCounter(){
+        return counter;
+    }
+
+    public void resetCounter(){
+        this.counter = 0;
     }
 }

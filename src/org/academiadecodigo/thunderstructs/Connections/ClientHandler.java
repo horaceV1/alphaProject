@@ -15,16 +15,14 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
 
     public PrintStream sendToClient;
+    public Menu menu = new Menu();
+    boolean gameOver = false;
     private Socket clientSocket;
     private Server server;
     private DataInputStream clientInputStream;
     private Prompt prompt;
     private String nickname = "";
-    boolean win = false;
-
-
     private int playerChoice;
-    public Menu menu = new Menu();
 
 
     public ClientHandler(Socket clientSocket, Server server) {
@@ -49,11 +47,14 @@ public class ClientHandler implements Runnable {
 
         StringInputScanner stringInputScanner = new StringInputScanner();
         stringInputScanner.setMessage("Introduce yourself: ");
-        String message = prompt.getUserInput(stringInputScanner);
+        String name = prompt.getUserInput(stringInputScanner);
 
-        registerClient(message, this);
-        System.out.println("Server number: " + server.getSystemNumber());
-        broadcast(message + " has joined the lobby.");
+        registerClient(name, this);
+        broadcast(getNickname() + " has joined the lobby.");
+
+        if (Server.hashMap.size() == 0) {
+            System.out.println("Server number: " + server.getSystemNumber());
+        }
     }
 
     public synchronized void registerClient(String nickname, ClientHandler clientHandler) {
@@ -65,28 +66,42 @@ public class ClientHandler implements Runnable {
         for (String client : Server.hashMap.keySet()) {
             System.out.println(client + ": " + message);
             Server.hashMap.get(client).sendToClient.println(message);
+            System.out.println(Server.hashMap.get(client).getNickname());
 
-            while (win == false) {
+            while (!gameOver) {
                 gameLogic(client);
-                //metes um mathrandom numa variavel, IF um client acertar acaba o jogo
             }
         }
+
     }
 
     public void gameLogic(String client) {
-        IntegerInputScanner question1 = new IntegerRangeInputScanner(server.getMin(), server.getMax());
-        question1.setMessage("Pick a number: ");
-        playerChoice = prompt.getUserInput(question1);
-        System.out.println(client + ": " + playerChoice);
+
+        if (Server.hashMap.size() <= 1) {
+            return;
+        }
+
+        if(server.getCounter() == 0) {
+            IntegerInputScanner question1 = new IntegerRangeInputScanner(server.getMin(), server.getMax());
+            question1.setMessage("Pick a number: ");
+            playerChoice = prompt.getUserInput(question1);
+            System.out.println(client + ": " + playerChoice);
+            Server.counter += 1;
+            System.out.println(Server.counter);
+            if(Server.counter == Server.hashMap.size()) {
+                server.resetCounter();
+            }
+        }
 
         if (playerChoice == server.getSystemNumber()) {
-            broadcast(client + ", you won!");
-            win = true;
             endgameMenu();
+            broadcast(client + ", you won!");
+            gameOver = true;
         }
     }
 
     public void endgameMenu() {
+
 
         String[] options = {"Back to Menu", "Play Again"};
 
@@ -110,7 +125,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public String getNickname () {
+    public String getNickname() {
         return this.nickname;
     }
 }
