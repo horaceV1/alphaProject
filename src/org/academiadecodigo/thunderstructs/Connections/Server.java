@@ -56,6 +56,7 @@ public class Server {
         }
     }
 
+<<<<<<< HEAD
     public int getMin() {
         return min;
     }
@@ -67,4 +68,7 @@ public class Server {
     public int getSystemNumber() {
         return systemNumber;
     }
+=======
+
+>>>>>>> guessnumber
 }

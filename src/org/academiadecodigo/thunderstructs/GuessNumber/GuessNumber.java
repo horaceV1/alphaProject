@@ -1,6 +1,14 @@
 package org.academiadecodigo.thunderstructs.GuessNumber;
 
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
+
 public class GuessNumber {
+
+
+
+    public Prompt prompt;
 
     int maxGuess;
     Player[] players;
@@ -14,8 +22,14 @@ public class GuessNumber {
 
     public void start(){
 
+    }
+
+
+    public void player1Guess() {
 
 
     }
+
+
 
 }
