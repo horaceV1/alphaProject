@@ -3,6 +3,7 @@ package org.academiadecodigo.thunderstructs;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Utility.Colors;
 import org.academiadecodigo.thunderstructs.Utility.Messages;
 
 import static org.academiadecodigo.thunderstructs.Utility.Messages.INSTRUCTIONS;
@@ -15,7 +16,7 @@ public class Menu {
 
         prompt = new Prompt(System.in, System.out);
 
-        String[] options = {"Instructions", "Number Picker", "Quit"};
+        String[] options = {Colors.BOLD +"Instructions", "Number Picker", "Quit" + Colors.ANSI_RESET};
 
         MenuInputScanner menu = new MenuInputScanner(options);
         menu.setMessage("Pick a number: ");
