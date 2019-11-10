@@ -5,7 +5,10 @@ import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
 import org.academiadecodigo.bootcamp.scanners.integer.IntegerRangeInputScanner;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.thunderstructs.Blackjack.Blackjack;
 import org.academiadecodigo.thunderstructs.Menu;
+import org.academiadecodigo.thunderstructs.Utility.Colors;
+import org.academiadecodigo.thunderstructs.Utility.Messages;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -23,6 +26,7 @@ public class ClientHandler implements Runnable {
     private Prompt prompt;
     private String nickname = "";
     private int playerChoice;
+    private boolean openMenu = true;
 
 
     public ClientHandler(Socket clientSocket, Server server) {
@@ -33,10 +37,13 @@ public class ClientHandler implements Runnable {
     public void run() {
 
         try {
+            if(!gameOver){
             clientInputStream = new DataInputStream(clientSocket.getInputStream());
             sendToClient = new PrintStream(clientSocket.getOutputStream());
             prompt = new Prompt(clientInputStream, sendToClient);
-            pickName();
+            runMenu();
+
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,16 +71,18 @@ public class ClientHandler implements Runnable {
     public void broadcast(String message) {
 
         for (String client : Server.hashMap.keySet()) {
-            if(!gameOver) {
+            if(!gameOver && !openMenu) {
                 System.out.println(client + ": " + message);
                 Server.hashMap.get(client).sendToClient.println(message);
                 System.out.println(Server.hashMap.get(client).getNickname());
-            } else {
+            } else if (gameOver && !openMenu){
                 subMenu();
+            } else if (openMenu && gameOver) {
+                runMenu();
             }
 
-
             while (!gameOver) {
+                openMenu = false;
                 gameLogic(client);
             }
 
@@ -109,12 +118,13 @@ public class ClientHandler implements Runnable {
 
     public void subMenu() {
 
-        String[] options = {"Back to Menu", "Play Again"};
+        String[] options = {"Play Again", "Back to the menu"};
 
         MenuInputScanner menu = new MenuInputScanner(options);
-        menu.setMessage("Pick a number: ");
+        menu.setMessage("Choose an option: ");
 
         int menuAnswer = prompt.getUserInput(menu);
+
         System.out.println("User chose: " + options[menuAnswer - 1]);
 
         menuOptions(menuAnswer);
@@ -123,15 +133,55 @@ public class ClientHandler implements Runnable {
     public void menuOptions(int menuAnswer) {
         switch (menuAnswer) {
             case 1:
-                menu.run();
+                gameOver = false;
+                broadcast("Starting new game");
                 break;
             case 2:
-                System.out.println("Play Again");
+                openMenu = true;
+                broadcast("Opening menu");
                 break;
         }
     }
 
     public String getNickname() {
         return this.nickname;
+    }
+///////////////////////////////////////////////////////////////////////////////
+    public void runMenu() {
+
+        String[] options = {"Instructions", "Guess the Number", "Quit"};
+
+        MenuInputScanner menu = new MenuInputScanner(options);
+        menu.setMessage("Pick a number: ");
+
+        int menuAnswer = prompt.getUserInput(menu);
+        System.out.println("User chose: " + options[menuAnswer - 1]);
+
+        menuOptions2(menuAnswer);
+
+    }
+
+    public void menuOptions2(int menuAnswer2) {
+
+        switch (menuAnswer2) {
+            case 1:
+                instructions();
+                break;
+            case 2:
+                System.out.println("Guess the Number");
+                pickName();
+                break;
+            case 3:
+                System.out.println("Bye!");
+                System.exit(0);
+                break;
+        }
+    }
+
+    private void instructions() {
+        StringInputScanner goBack = new StringInputScanner();
+        goBack.setMessage(Messages.INSTRUCTIONS);
+        prompt.getUserInput(goBack);
+        run();
     }
 }

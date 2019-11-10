@@ -12,8 +12,6 @@ public class Menu {
 
     public void run() {
 
-        prompt = new Prompt(System.in, System.out);
-
         String[] options = {"Instructions", "Guess the Number", "Guess the Card", "BlackJack", "Quit"};
 
         MenuInputScanner menu = new MenuInputScanner(options);
