@@ -3,16 +3,42 @@ package org.academiadecodigo.thunderstructs;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+<<<<<<< HEAD
 import org.academiadecodigo.thunderstructs.Blackjack.Blackjack;
 import org.academiadecodigo.thunderstructs.Utility.Messages;
 
+=======
+<<<<<<< HEAD
+import org.academiadecodigo.thunderstructs.Utility.Colors;
+=======
+<<<<<<< HEAD
+>>>>>>> a704ca3ca4410c9e9a81b49217a958c8b16aa7ed
+import org.academiadecodigo.thunderstructs.Utility.Messages;
+
+import static org.academiadecodigo.thunderstructs.Utility.Messages.INSTRUCTIONS;
+
+=======
+import org.academiadecodigo.thunderstructs.Blackjack.Blackjack;
+import org.academiadecodigo.thunderstructs.Utility.Messages;
+
+>>>>>>> guessnumber
+>>>>>>> 0e6c7ed652ec259629c96e17489e8d02eb1ff4e9
 public class Menu {
 
     private Prompt prompt;
 
     public void run() {
 
+<<<<<<< HEAD
+=======
+        prompt = new Prompt(System.in, System.out);
+
+<<<<<<< HEAD
+        String[] options = {Colors.BOLD +"Instructions", "Number Picker", "Quit" + Colors.ANSI_RESET};
+=======
+>>>>>>> 0e6c7ed652ec259629c96e17489e8d02eb1ff4e9
         String[] options = {"Instructions", "Guess the Number", "Guess the Card", "BlackJack", "Quit"};
+>>>>>>> a704ca3ca4410c9e9a81b49217a958c8b16aa7ed
 
         MenuInputScanner menu = new MenuInputScanner(options);
         menu.setMessage("Pick a number: ");
@@ -48,7 +74,11 @@ public class Menu {
         }
     }
 
+<<<<<<< HEAD
+    public void instructions() {
+=======
     private void instructions() {
+>>>>>>> guessnumber
         StringInputScanner goBack = new StringInputScanner();
         goBack.setMessage(Messages.INSTRUCTIONS);
         prompt.getUserInput(goBack);
