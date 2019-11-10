@@ -1,6 +1,11 @@
 package org.academiadecodigo.thunderstructs.Utility;
 
 public class Colors {
+
+    //Text Decorations
+    public static final String BOLD = "\u001b[1m";
+    public static final String UNDERLINE = "\\u001b[4m";
+
     //Text Colors
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String TEXT_RED = "\u001B[31m";
