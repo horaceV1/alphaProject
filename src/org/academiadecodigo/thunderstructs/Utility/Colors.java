@@ -17,8 +17,9 @@ public class Colors {
     public static final String TEXT_GREEN = "\u001B[32m";
     public static final String TEXT_BLUE = "\u001B[34m";
     public static final String TEXT_WHITE = "\u001B[37m";
-    public static final String TEXT_BLACK = "\u001B[30m";
-
+    public static final String TEXT_BLACK = "\033[1;30m";
+    public static final String TEXT_CYAN = "\u001B[36m";
+    public static final String TEXT_ORANGE = "\u001b[31;1m";
 
     //Background Colors
     public static final String BACKGROUND_RED = "\u001B[41m";

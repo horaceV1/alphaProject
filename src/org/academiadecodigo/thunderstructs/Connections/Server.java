@@ -59,10 +59,6 @@ public class Server {
         }
     }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 0e6c7ed652ec259629c96e17489e8d02eb1ff4e9
     public int getMin() {
         return min;
     }
@@ -74,7 +70,6 @@ public class Server {
     public int getSystemNumber() {
         return systemNumber;
     }
-<<<<<<< HEAD
 
     public static HashMap<String, ClientHandler> getPlayers() {
         return hashMap;
@@ -87,9 +82,4 @@ public class Server {
     public void resetCounter(){
         this.counter = 0;
     }
-=======
-=======
-
->>>>>>> guessnumber
->>>>>>> 0e6c7ed652ec259629c96e17489e8d02eb1ff4e9
 }

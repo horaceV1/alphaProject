@@ -51,10 +51,10 @@ public class ClientHandler implements Runnable {
 
     public void runMenu() {
 
-        String[] options = {"Instructions", "Guess the Number", "Quit"};
+        String[] options = {Colors.BOLD +"Instructions", "Guess the Number", "Quit" + Colors.ANSI_RESET};
 
         MenuInputScanner menu = new MenuInputScanner(options);
-        menu.setMessage("Pick a number: ");
+        menu.setMessage(Messages.WELCOME_TEXT);
 
         int menuAnswer = prompt.getUserInput(menu);
         System.out.println("User chose: " + options[menuAnswer - 1]);
@@ -66,11 +66,11 @@ public class ClientHandler implements Runnable {
     public void pickName() {
 
         StringInputScanner stringInputScanner = new StringInputScanner();
-        stringInputScanner.setMessage("Introduce yourself: ");
+        stringInputScanner.setMessage(Colors.BOLD + Colors.TEXT_BLUE +"Introduce yourself: " + Colors.ANSI_RESET);
         String name = prompt.getUserInput(stringInputScanner);
 
         registerClient(name, this);
-        broadcast(name + " has joined the lobby.");
+        broadcast(Colors.TEXT_GREEN + name + " has joined the lobby." + Colors.ANSI_RESET);
 
         if (Server.hashMap.size() == 0) {
             System.out.println("Server number: " + server.getSystemNumber());
@@ -106,7 +106,7 @@ public class ClientHandler implements Runnable {
 
         if(server.getCounter() == 0) {
             IntegerInputScanner question1 = new IntegerRangeInputScanner(server.getMin(), server.getMax());
-            question1.setMessage("Pick a number: ");
+            question1.setMessage(Colors.BOLD + Colors.TEXT_CYAN +"Pick a number: " + Colors.ANSI_RESET);
             playerChoice = prompt.getUserInput(question1);
             System.out.println(client + ": " + playerChoice);
             Server.counter += 1;
@@ -118,7 +118,7 @@ public class ClientHandler implements Runnable {
 
         if (playerChoice == server.getSystemNumber()) {
             gameOver = true;
-            broadcast(client + " won!");
+            broadcast(Colors.BOLD + client + " won!" + Colors.ANSI_RESET);
             Server.hashMap.clear();
             subMenu();
         }
@@ -126,10 +126,10 @@ public class ClientHandler implements Runnable {
 
     public void subMenu() {
 
-        String[] options = {"Back to Menu", "Quit"};
+        String[] options = {Colors.BOLD +"Back to Menu", "Quit" + Colors.ANSI_RESET};
 
         MenuInputScanner menu = new MenuInputScanner(options);
-        menu.setMessage("Choose an option: ");
+        menu.setMessage(Colors.BOLD +"Choose an option: " + Colors.ANSI_RESET);
 
         int menuAnswer = prompt.getUserInput(menu);
         System.out.println("User chose: " + options[menuAnswer - 1]);
@@ -144,10 +144,12 @@ public class ClientHandler implements Runnable {
     public void menuOptions(int menuAnswer) {
         switch (menuAnswer) {
             case 1:
+                System.out.println(Messages.FLAME_POWER_WOOOOOOO);
                 openMenu = true;
                 broadcast("Opening menu");
 
             case 2:
+                System.out.println(Messages.FLAME_POWER_WOOOOOOO);
                System.exit(1);
                 break;
         }
@@ -175,7 +177,7 @@ public class ClientHandler implements Runnable {
     private void instructions() {
         StringInputScanner goBack = new StringInputScanner();
         goBack.setMessage(Messages.INSTRUCTIONS);
-        goBack.setError("Press ANY key and ENTER to go back!");
+        goBack.setError(Colors.BOLD + "Press ANY key and ENTER to go back!" + Colors.ANSI_RESET);
         prompt.getUserInput(goBack);
         run();
     }
